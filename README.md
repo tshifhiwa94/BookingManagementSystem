@@ -1,1 +1,2 @@
 # BookingManagement
+The Booking Management System is a centralized platform that enables users to reserve resources and request services across multiple branches and departments. It supports role-based access, real-time availability, automated notifications, and audit logging for transparency. The system improves operational efficiency by streamlining approvals, tracking usage, and integrating email alerts
