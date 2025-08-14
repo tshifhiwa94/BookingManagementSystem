@@ -16,6 +16,7 @@ using BookingManagement.Services.BranchService;
 using BookingManagement.Services.DepartmentsService;
 using BookingManagement.Services.PersonService;
 using BookingManagement.Services.ResourcesService;
+using BookingManagement.Services.ServicesService;
 using BookingManagement.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -55,7 +56,7 @@ namespace BookingManagement.Extensions
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IResourceService, ResourceService>();
             //services.AddScoped<IResourceRequestService, ResourceRequestService>();
-            //services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IServiceService, ServiceService>();
             //services.AddScoped<IServiceRequestService, ServiceRequestService>();
             //services.AddScoped<INotificationService, NotificationService>();
 

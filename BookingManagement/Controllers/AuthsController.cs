@@ -21,7 +21,8 @@ namespace BookingManagement.Controllers
             if (personDto == null) { return BadRequest("Payload is empty"); }
 
             var newPerson = await _authService.RegisterAsync(personDto);
-            if (newPerson == null) { BadRequest("Username already exist or failed to create user"); }
+
+            if (newPerson == null) { return BadRequest("Username or Email Address already exist or failed to create user"); }
 
             return Ok(newPerson);
         }
@@ -37,7 +38,7 @@ namespace BookingManagement.Controllers
             var user = await _authService.LoginAsync(input);
             if (user == null)
             {
-                BadRequest("Login Failed");
+                return BadRequest("Login Failed");
             }
 
             return Ok(user);

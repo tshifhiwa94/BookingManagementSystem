@@ -29,7 +29,7 @@ namespace BookingManagement.Services.ResourcesService
             var branch = await _branchRepo.GetAsync(input.BranchId);
             if (branch is null) return null;
 
-            var department = await _departmentRepo.GetAsync((Guid)input.DepartmentId);
+            var department = await _departmentRepo.GetAsync((Guid)input.DepartmentId) ?? null;
 
             var resource = _mapper.Map<Resource>(input);
             resource.Branch = branch;

@@ -10,7 +10,7 @@ namespace BookingManagement.Services.ServicesService.MapProfile
         public ServiceRequestMapProfile()
         {
 
-            / CreateMap<ServiceRequest, ServiceRequestDto>()
+            CreateMap<ServiceRequest, ServiceRequestDto>()
                 .ForMember(dest => dest.Requester, opt => opt.MapFrom(src => src.Requester))
                 .ForMember(dest => dest.Service, opt => opt.MapFrom(src => src.Service))
                 .ForMember(dest => dest.ApprovedBy, opt => opt.MapFrom(src => src.ApprovedBy.Name != null ? src.ApprovedBy.Name : null))
