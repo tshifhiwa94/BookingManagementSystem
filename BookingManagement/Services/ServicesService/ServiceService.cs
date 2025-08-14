@@ -26,7 +26,7 @@ namespace BookingManagement.Services.ServicesService
 
             if (department == null) { return null; }
 
-            var service = _mapper.Map<Service>(department);
+            var service = _mapper.Map<Service>(input);
 
             // map department property to service
             service.Department = department;

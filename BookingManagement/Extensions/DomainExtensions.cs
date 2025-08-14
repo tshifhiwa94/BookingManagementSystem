@@ -32,7 +32,6 @@ namespace BookingManagement.Extensions
         public static void BookingManagentDomain(this IServiceCollection services, IConfiguration configuration)
         {
 
-            // Register repositories here
             //services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddTransient(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped<IUserRepository, UserRepository>();
@@ -57,7 +56,7 @@ namespace BookingManagement.Extensions
             services.AddScoped<IResourceService, ResourceService>();
             //services.AddScoped<IResourceRequestService, ResourceRequestService>();
             services.AddScoped<IServiceService, ServiceService>();
-            //services.AddScoped<IServiceRequestService, ServiceRequestService>();
+            services.AddScoped<IServiceRequestService, ServiceRequestService>();
             //services.AddScoped<INotificationService, NotificationService>();
 
 
@@ -103,7 +102,6 @@ namespace BookingManagement.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]!))
                     };
                 });
-
         }
     }
 }

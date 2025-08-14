@@ -13,7 +13,7 @@ namespace BookingManagement.Domain.Resources
         /// <summary>
         /// 
         /// </summary>
-        public virtual string Description { get; set; }
+        public virtual string? Description { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -39,7 +39,7 @@ namespace BookingManagement.Domain.Resources
         /// 
         /// </summary>
 
-        public virtual Person RejectedBy { get; set; }
+        public virtual Person? RejectedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -55,7 +55,7 @@ namespace BookingManagement.Domain.Resources
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person CancelledBy { get; set; }
+        public virtual Person? CancelledBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -67,7 +67,7 @@ namespace BookingManagement.Domain.Resources
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person ReturnedBy { get; set; }
+        public virtual Person? ReturnedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>

@@ -40,11 +40,11 @@ namespace BookingManagement.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person ApprovedBy { get; set; }
+        public virtual Person? ApprovedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person RejectedBy { get; set; }
+        public virtual Person? RejectedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -52,7 +52,7 @@ namespace BookingManagement.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        public virtual string RejectionReason { get; set; }
+        public virtual string? RejectionReason { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -64,11 +64,11 @@ namespace BookingManagement.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person CancelledBy { get; set; }
+        public virtual Person? CancelledBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public virtual string CancellationReason { get; set; }
+        public virtual string? CancellationReason { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -80,7 +80,7 @@ namespace BookingManagement.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person FulfilledBy { get; set; }
+        public virtual Person? FulfilledBy { get; set; }
         /// <summary>
         /// total duration in minutes between when a service started and when it was completed.
         /// </summary>
