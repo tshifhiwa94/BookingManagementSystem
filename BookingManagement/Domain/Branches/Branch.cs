@@ -14,17 +14,17 @@ namespace BookingManagement.Domain.Branches
         /// <summary>
         /// Physical address of the branch.
         /// </summary>
-        public virtual Address Address { get; set; }
+        public virtual Address? Address { get; set; }
 
         /// <summary>
         /// Contact phone number.
         /// </summary>
-        public virtual string PhoneNumber { get; set; }
+        public virtual string? PhoneNumber { get; set; }
 
         /// <summary>
         /// Email address for communication.
         /// </summary>
-        public virtual string Email { get; set; }
+        public virtual string? Email { get; set; }
 
         /// <summary>
         /// Indicates whether the branch is currently active.
@@ -44,7 +44,7 @@ namespace BookingManagement.Domain.Branches
         /// <summary>
         /// Operating hours of the branch.
         /// </summary>
-        public virtual string OperatingHours { get; set; }
+        public virtual string? OperatingHours { get; set; }
 
         /// <summary>
         /// Time zone of the branch location.

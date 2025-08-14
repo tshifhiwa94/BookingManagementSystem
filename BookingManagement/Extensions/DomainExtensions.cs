@@ -16,6 +16,7 @@ using BookingManagement.Services.BranchService;
 using BookingManagement.Services.DepartmentsService;
 using BookingManagement.Services.PersonService;
 using BookingManagement.Services.ResourcesService;
+using BookingManagement.Services.ServicesService;
 using BookingManagement.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +32,6 @@ namespace BookingManagement.Extensions
         public static void BookingManagentDomain(this IServiceCollection services, IConfiguration configuration)
         {
 
-            // Register repositories here
             //services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddTransient(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped<IUserRepository, UserRepository>();
@@ -55,8 +55,8 @@ namespace BookingManagement.Extensions
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IResourceService, ResourceService>();
             //services.AddScoped<IResourceRequestService, ResourceRequestService>();
-            //services.AddScoped<IServiceService, ServiceService>();
-            //services.AddScoped<IServiceRequestService, ServiceRequestService>();
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IServiceRequestService, ServiceRequestService>();
             //services.AddScoped<INotificationService, NotificationService>();
 
 
@@ -102,7 +102,6 @@ namespace BookingManagement.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:Token"]!))
                     };
                 });
-
         }
     }
 }

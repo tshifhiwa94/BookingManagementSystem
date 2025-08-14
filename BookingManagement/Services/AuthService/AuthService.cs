@@ -68,9 +68,10 @@ namespace BookingManagement.Services.AuthService
         {
 
 
-            var existingUser = await _userManager.FindByNameAsync(input.UserName);
-            if (existingUser is not null) return null;
+            var existingUserName = await _userManager.FindByNameAsync(input.UserName);
+            var existingEmail = await _userManager.FindByEmailAsync(input.EmailAddress);
 
+            if (existingUserName is not null || existingEmail is not null) return null;
 
             // 1. Create User from input
             var user = _mapper.Map<User>(input);
@@ -82,7 +83,8 @@ namespace BookingManagement.Services.AuthService
             }
 
             // 2. Assign roles to the user
-            var roleNames = input.RoleNames?.Select(r => r.Trim()).Where(r => !string.IsNullOrWhiteSpace(r)).ToList() ?? new List<string>() { "User" };
+            var roleNames = input.RoleNames.Any() ? input.RoleNames?.Select(r => r.Trim()).Where(r => !string.IsNullOrWhiteSpace(r)).ToList() : new List<string>() { "User" };
+
 
             foreach (var roleName in roleNames)
             {

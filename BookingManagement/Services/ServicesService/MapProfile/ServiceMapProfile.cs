@@ -16,8 +16,7 @@ namespace BookingManagement.Services.ServicesService.MapProfile
                 .ForMember(d => d.CategoryName, o => o.MapFrom(s => s.Category > 0 ? s.Category.GetDisplayName() : null))
                 .ForMember(d => d.DeliveryMethodName, o => o.MapFrom(s => s.DeliveryMethod > 0 ? s.DeliveryMethod.GetDisplayName() : null));
 
-            CreateMap<CreateServiceDto, Service>()
-    .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<CreateServiceDto, Service>();
 
             CreateMap<UpdateServiceDto, Service>();
         }

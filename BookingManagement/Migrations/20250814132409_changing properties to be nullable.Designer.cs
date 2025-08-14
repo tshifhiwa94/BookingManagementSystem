@@ -4,6 +4,7 @@ using BookingManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingManagement.Migrations
 {
     [DbContext(typeof(BookManagementDbContext))]
-    partial class BookManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814132409_changing properties to be nullable")]
+    partial class changingpropertiestobenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +79,7 @@ namespace BookingManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AddressId")
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Country")
@@ -400,7 +403,7 @@ namespace BookingManagement.Migrations
                     b.Property<string>("CancellationReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CancelledById")
+                    b.Property<Guid>("CancelledById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatedBy")
@@ -416,6 +419,7 @@ namespace BookingManagement.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EndDate")
@@ -436,7 +440,7 @@ namespace BookingManagement.Migrations
                     b.Property<string>("Purpose")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RejectedById")
+                    b.Property<Guid>("RejectedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("RejectionDate")
@@ -451,7 +455,7 @@ namespace BookingManagement.Migrations
                     b.Property<bool>("RequiresApproval")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ReturnedById")
+                    b.Property<Guid>("ReturnedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ReturnedDate")
@@ -550,7 +554,7 @@ namespace BookingManagement.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ApprovedById")
+                    b.Property<Guid>("ApprovedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ApprovedDate")
@@ -562,7 +566,7 @@ namespace BookingManagement.Migrations
                     b.Property<string>("CancellationReason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CancelledById")
+                    b.Property<Guid>("CancelledById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatedBy")
@@ -584,7 +588,7 @@ namespace BookingManagement.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("FulfilledById")
+                    b.Property<Guid>("FulfilledById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("FulfillmentEndDate")
@@ -602,7 +606,7 @@ namespace BookingManagement.Migrations
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("RejectedById")
+                    b.Property<Guid>("RejectedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("RejectionDate")
@@ -855,7 +859,9 @@ namespace BookingManagement.Migrations
                 {
                     b.HasOne("BookingManagement.Domain.Addresses.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "Manager")
                         .WithMany()
@@ -940,12 +946,14 @@ namespace BookingManagement.Migrations
                     b.HasOne("BookingManagement.Domain.Persons.Person", "CancelledBy")
                         .WithMany()
                         .HasForeignKey("CancelledById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "RejectedBy")
                         .WithMany()
                         .HasForeignKey("RejectedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "Requester")
                         .WithMany()
@@ -956,7 +964,8 @@ namespace BookingManagement.Migrations
                     b.HasOne("BookingManagement.Domain.Persons.Person", "ReturnedBy")
                         .WithMany()
                         .HasForeignKey("ReturnedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Resources.Resource", "Resource")
                         .WithMany()
@@ -993,22 +1002,26 @@ namespace BookingManagement.Migrations
                     b.HasOne("BookingManagement.Domain.Persons.Person", "ApprovedBy")
                         .WithMany()
                         .HasForeignKey("ApprovedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "CancelledBy")
                         .WithMany()
                         .HasForeignKey("CancelledById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "FulfilledBy")
                         .WithMany()
                         .HasForeignKey("FulfilledById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "RejectedBy")
                         .WithMany()
                         .HasForeignKey("RejectedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BookingManagement.Domain.Persons.Person", "Requester")
                         .WithMany()

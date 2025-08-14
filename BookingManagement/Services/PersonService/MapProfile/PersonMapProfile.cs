@@ -14,7 +14,8 @@ namespace BookingManagement.Services.PersonService.MapProfile
             // Person to PersonDto
             CreateMap<Person, PersonDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender != null && src.Gender != 0 ? src.Gender.GetDisplayName() : null));
+                .ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender != null && src.Gender != 0 ? src.Gender.GetDisplayName() : null))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id != null ? src.User.Id : null));
 
             // PersonDto to Person
             CreateMap<PersonDto, Person>()
