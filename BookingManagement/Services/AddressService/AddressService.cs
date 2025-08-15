@@ -21,6 +21,7 @@ namespace BookingManagement.Services.AddressService
         public async Task<AddressDto> CreateAsync(AddressDto addressDto)
         {
             var address = _mapper.Map<Address>(addressDto);
+
             await _addressRepo.AddAsync(address);
 
             return _mapper.Map<AddressDto>(address);

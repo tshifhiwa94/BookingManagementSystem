@@ -14,6 +14,7 @@ namespace BookingManagement.Services.BranchService.MapProfile
 
             CreateMap<CreateBranchDto, Branch>()
                 .ForMember(d => d.Id, o => o.Ignore());
+            CreateMap<UpdateBranchDto, Branch>();
 
         }
     }

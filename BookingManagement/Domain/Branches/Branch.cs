@@ -29,7 +29,7 @@ namespace BookingManagement.Domain.Branches
         /// <summary>
         /// Indicates whether the branch is currently active.
         /// </summary>
-        public virtual bool IsActive { get; set; }
+        public virtual bool IsActive { get; set; } = true;
 
         /// <summary>
         /// Date when the branch was established.
