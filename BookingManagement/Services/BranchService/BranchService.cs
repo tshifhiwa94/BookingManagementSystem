@@ -40,24 +40,48 @@ namespace BookingManagement.Services.BranchService
 
         }
 
-        public Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var branch = await _branchRepo.GetAsync(id);
+
+            if (branch is null) return false;
+
+            var isItemDeleted = await _branchRepo.DeleteAsync(branch);
+
+            return isItemDeleted ? true : false;
         }
 
-        public Task<IEnumerable<BranchDto>> GetAllAsync()
+        public async Task<IEnumerable<BranchDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _mapper.Map<List<BranchDto>>(await _branchRepo.GetAllAsync(b => b.Manager, b => b.Address));
         }
 
-        public Task<BranchDto> GetAsync(Guid id)
+        public async Task<BranchDto> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _mapper.Map<BranchDto>(await _branchRepo.GetAsync(id, b => b.Manager, b => b.Address));
         }
 
-        public Task<BranchDto> UpdateAsync(BranchDto input)
+        public async Task<BranchDto> UpdateAsync(UpdateBranchDto input)
         {
-            throw new NotImplementedException();
+            var branch = await _branchRepo.GetAsync(input.Id);
+            var address = await _addressRepo.GetAsync(input.AddressId);
+            var manager = await _personRepo.GetAsync(input.ManagerId);
+
+            if (branch is null || address is null || manager is null) return null;
+
+            // Use AutoMapper to map to the existing entity
+            _mapper.Map(input, branch);
+
+            if (branch.Address != address)
+            {
+                branch.Address = address;
+            }
+            if (branch.Manager != manager)
+            {
+                branch.Manager = manager;
+            }
+
+            return _mapper.Map<BranchDto>(await _branchRepo.UpdateAsync(branch));
         }
     }
 }

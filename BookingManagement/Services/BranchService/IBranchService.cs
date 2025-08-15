@@ -7,7 +7,7 @@ namespace BookingManagement.Services.BranchService
         Task<BranchDto> CreateAsync(CreateBranchDto iput);
         Task<BranchDto> GetAsync(Guid id);
         Task<IEnumerable<BranchDto>> GetAllAsync();
-        Task<BranchDto> UpdateAsync(BranchDto input);
+        Task<BranchDto> UpdateAsync(UpdateBranchDto input);
         Task<bool> DeleteAsync(Guid id);
     }
 }
