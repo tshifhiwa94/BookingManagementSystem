@@ -30,7 +30,7 @@ namespace BookingManagement.Domain.Resources
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person ApprovedBy { get; set; }
+        public virtual Person? ApprovedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>
