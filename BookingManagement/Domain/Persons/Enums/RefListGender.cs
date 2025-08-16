@@ -2,7 +2,7 @@
 
 namespace BookingManagement.Domain.Persons.Enums
 {
-    public enum RefListGender : int
+    public enum RefListGender : long
     {
         [Description("Male")]
         male = 1,

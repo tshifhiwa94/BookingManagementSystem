@@ -20,7 +20,7 @@ namespace BookingManagement.Services.PersonService
             _mapper = mapper;
         }
 
-        public async Task<PersonDto> CreateAsync(PersonDto input)
+        public async Task<PersonDto> CreateAsync(CreatePersonDto input)
         {
             var person = _mapper.Map<Person>(input);
 
@@ -50,9 +50,9 @@ namespace BookingManagement.Services.PersonService
 
 
 
-        public async Task<PersonDto> UpdateAsync(PersonDto personDto)
+        public async Task<PersonDto> UpdateAsync(UpdatePersonDto personDto)
         {
-            var person = await _personRepo.GetAsync((Guid)personDto.Id);
+            var person = await _personRepo.GetAsync(personDto.Id);
             if (person is null) return null;
 
             // Use AutoMapper to map to the existing entity

@@ -14,15 +14,15 @@ namespace BookingManagement.Services.PersonService.MapProfile
             // Person to PersonDto
             CreateMap<Person, PersonDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender != null && src.Gender != 0 ? src.Gender.GetDisplayName() : null))
+                .ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender > 0 ? src.Gender.GetDisplayName() : null))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id != null ? src.User.Id : null));
 
             // PersonDto to Person
-            CreateMap<PersonDto, Person>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.User, opt => opt.Ignore());
+            CreateMap<CreatePersonDto, Person>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<UpdatePersonDto, Person>();
 
-            CreateMap<PersonDto, User>()
+            CreateMap<CreatePersonDto, User>()
                 .ForMember(x => x.Email, m => m.MapFrom(x => x.EmailAddress))
                 .ForMember(x => x.PasswordHash, m => m.MapFrom(x => x.Password))
                 .ForMember(x => x.PhoneNumber, m => m.MapFrom(x => x.Phone))

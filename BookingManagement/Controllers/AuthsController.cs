@@ -16,7 +16,7 @@ namespace BookingManagement.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(PersonDto personDto)
+        public async Task<IActionResult> Register(CreatePersonDto personDto)
         {
             if (personDto == null) { return BadRequest("Payload is empty"); }
 
