@@ -54,7 +54,7 @@ namespace BookingManagement.Extensions
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<IResourceService, ResourceService>();
-            //services.AddScoped<IResourceRequestService, ResourceRequestService>();
+            services.AddScoped<IResourceRequestService, ResourceRequestService>();
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IServiceRequestService, ServiceRequestService>();
             //services.AddScoped<INotificationService, NotificationService>();
