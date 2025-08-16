@@ -6,8 +6,8 @@ namespace BookingManagement.Services.PersonService
     {
         Task<PersonDto> GetAsync(Guid id);
         Task<IEnumerable<PersonDto>> GetAllAsync();
-        Task<PersonDto> CreateAsync(PersonDto input);
-        Task<PersonDto> UpdateAsync(PersonDto personDto);
+        Task<PersonDto> CreateAsync(CreatePersonDto input);
+        Task<PersonDto> UpdateAsync(UpdatePersonDto personDto);
         Task<bool> DeleteAsync(Guid id);
     }
 }

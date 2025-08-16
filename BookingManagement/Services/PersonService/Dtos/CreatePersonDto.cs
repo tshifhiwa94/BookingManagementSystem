@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingManagement.Services.PersonService.Dtos
 {
-    public class PersonDto
+    public class CreatePersonDto
     {
         public Guid? Id { get; set; }
         /// <summary>
@@ -18,15 +18,14 @@ namespace BookingManagement.Services.PersonService.Dtos
         /// 
         /// </summary>
         public string Surname { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Password { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public long Gender { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string GenderName { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -45,12 +44,8 @@ namespace BookingManagement.Services.PersonService.Dtos
         /// <summary>
         /// 
         /// </summary>
-        public Guid UserId { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
 
         [NotMapped]
-        public string[] RoleNames { get; set; }
+        public string[]? RoleNames { get; set; }
     }
 }

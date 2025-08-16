@@ -5,7 +5,7 @@ namespace BookingManagement.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<PersonDto> RegisterAsync(PersonDto input);
+        Task<PersonDto> RegisterAsync(CreatePersonDto input);
         Task<TokenResponseDto> LoginAsync(LoginDto input);
         Task LogoutAsync();
         Task<PersonDto> GetCurrentUserAsync();

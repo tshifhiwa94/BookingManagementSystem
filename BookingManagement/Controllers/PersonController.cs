@@ -18,7 +18,7 @@ namespace BookingManagement.Controllers
         }
 
         [HttpPost("CreateAsync")]
-        public async Task<IActionResult> CreatePerson(PersonDto personDto)
+        public async Task<IActionResult> CreatePerson(CreatePersonDto personDto)
         {
             if (personDto == null)
             {
@@ -58,7 +58,7 @@ namespace BookingManagement.Controllers
         }
 
         [HttpPut("UpdateAsync")]
-        public async Task<IActionResult> UpdatePerson(PersonDto personDto)
+        public async Task<IActionResult> UpdatePerson(UpdatePersonDto personDto)
         {
             if (personDto == null)
             {

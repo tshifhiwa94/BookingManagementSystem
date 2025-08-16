@@ -1,15 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingManagement.Services.PersonService.Dtos
 {
-    public class PersonDto
+    public class UpdatePersonDto
     {
-        public Guid? Id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string UserName { get; set; }
+        public Guid Id { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -22,11 +17,7 @@ namespace BookingManagement.Services.PersonService.Dtos
         /// <summary>
         /// 
         /// </summary>
-        public long Gender { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string GenderName { get; set; }
+        public long? Gender { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -42,15 +33,5 @@ namespace BookingManagement.Services.PersonService.Dtos
         /// 
         /// </summary>
         public string EmailAddress { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public Guid UserId { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-
-        [NotMapped]
-        public string[] RoleNames { get; set; }
     }
 }
