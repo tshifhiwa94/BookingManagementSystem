@@ -2,7 +2,6 @@
 using BookingManagement.Domain.Persons;
 using BookingManagement.Repositories.PersonRepository;
 using BookingManagement.Services.PersonService.Dtos;
-using BookingManagement.Services.UserService;
 
 namespace BookingManagement.Services.PersonService
 {
@@ -10,13 +9,10 @@ namespace BookingManagement.Services.PersonService
     {
         private readonly IPersonRepository _personRepo;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
         public PersonService(IPersonRepository personRepo
-            , IUserService userService
             , IMapper mapper)
         {
             _personRepo = personRepo;
-            _userService = userService;
             _mapper = mapper;
         }
 
