@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingManagement", "BookingManagement\BookingManagement.csproj", "{C6BAF6DC-268A-4E53-A3A0-31A0F684B5FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingManagement.Test", "BookingManagement.Test\BookingManagement.Test.csproj", "{2DFB05C5-6B64-4A34-9444-1917CBCF5AAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C6BAF6DC-268A-4E53-A3A0-31A0F684B5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6BAF6DC-268A-4E53-A3A0-31A0F684B5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6BAF6DC-268A-4E53-A3A0-31A0F684B5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DFB05C5-6B64-4A34-9444-1917CBCF5AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DFB05C5-6B64-4A34-9444-1917CBCF5AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DFB05C5-6B64-4A34-9444-1917CBCF5AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DFB05C5-6B64-4A34-9444-1917CBCF5AAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
