@@ -56,7 +56,6 @@ namespace BookingManagement.Services.PersonService
             await _personRepo.UpdateAsync(person);
 
             return _mapper.Map<PersonDto>(person);
-
         }
 
 

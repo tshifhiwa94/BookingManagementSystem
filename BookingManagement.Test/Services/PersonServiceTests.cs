@@ -96,16 +96,52 @@ public class PersonServiceTests
 
 
     [Fact]
-    public async Task UpdateAsync_ShouldReturnNull_WhenPersonDoesNotExist()
+    public async Task UpdateAsync_ShouldReturnPersonDto_WhenPersonDoesExist()
     {
         // Arrange
-        var updateDto = new UpdatePersonDto { Id = Guid.NewGuid() };
-        _personRepoMock.Setup(r => r.GetAsync(updateDto.Id)).ReturnsAsync((Person)null);
+        var personId = Guid.NewGuid();
+        var updateDto = new UpdatePersonDto
+        {
+            Id = personId,
+            Name = "Updated Name",
+            Surname = "1234567890",
+            EmailAddress = "updated@example.com"
+        };
 
+        var existinPerson = new Person
+        {
+            Id = personId,
+            Name = "Old name",
+            Surname = "0987654321",
+            EmailAddress = "old@example.com"
+        };
+
+        _personRepoMock.Setup(r => r.GetAsync(updateDto.Id)).ReturnsAsync(existinPerson);
+
+        _mapperMock.Setup(m => m.Map<PersonDto>(existinPerson))
+           .Returns(new PersonDto
+           {
+               Id = personId,
+               Name = updateDto.Name,
+               Surname = updateDto.Surname,
+               EmailAddress = updateDto.EmailAddress
+           });
+
+        #region Reference
+
+        //_mapperMock.Setup(m => m.Map(updateDto, existinPerson))
+        //   .Callback<UpdatePersonDto, Person>((dto, person) =>
+        //   {
+        //       person.Name = dto.Name;
+        //       person.Surname = dto.Surname;
+        //       person.EmailAddress = dto.EmailAddress;
+        //   });
+        #endregion
         // Act
         var result = await _personService.UpdateAsync(updateDto);
         // Assert
-        Assert.Null(result);
+        Assert.NotNull(result);
+        Assert.Equal(personId, result.Id);
     }
 
 }
