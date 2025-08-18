@@ -8,6 +8,7 @@ using BookingManagement.Repositories.PersonRepository;
 using BookingManagement.Services.BranchService;
 using BookingManagement.Services.BranchService.Dtos;
 using Moq;
+using System.Linq.Expressions;
 
 namespace BookingManagement.Test.Services
 {
@@ -131,7 +132,7 @@ namespace BookingManagement.Test.Services
                 EstablishedDate = targetBranch.EstablishedDate
             };
 
-            _branchRepoMock.Setup(repo => repo.GetAsync(branchId, b => b.Address, p => p.Manager))
+            _branchRepoMock.Setup(repo => repo.GetAsync(branchId, It.IsAny<Expression<Func<Branch, object>>>(), It.IsAny<Expression<Func<Branch, object>>>()))
                            .ReturnsAsync(targetBranch);
 
             _mapperMock.Setup(mapper => mapper.Map<BranchDto>(targetBranch))
@@ -141,9 +142,14 @@ namespace BookingManagement.Test.Services
             var result = await _branchService.GetAsync(branchId);
 
             // Assert
-            Assert.Null(result);
-
+            Assert.NotNull(result);
+            Assert.Equal(expectedDto.Id, result.Id);
+            Assert.Equal(expectedDto.Name, result.Name);
+            Assert.Equal(expectedDto.PhoneNumber, result.PhoneNumber);
+            Assert.Equal(expectedDto.Email, result.Email);
+            Assert.Equal(expectedDto.EstablishedDate, result.EstablishedDate);
         }
+
 
 
         [Fact]
@@ -174,19 +180,80 @@ namespace BookingManagement.Test.Services
             Assert.True(result);
         }
 
-        public async Task UpdateAsync_ShouldReturnNull_WhenBranchDoesNotExist()
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnBranchDto_WhenBranchAndDependenciesExist()
         {
             // Arrange
-            var updateDto = new UpdateBranchDto { Id = Guid.NewGuid() };
-            _branchRepoMock.Setup(r => r.GetAsync(updateDto.Id)).ReturnsAsync((Branch)null);
+            var branchId = Guid.NewGuid();
+            var addressId = Guid.NewGuid();
+            var managerId = Guid.NewGuid();
+
+            var updateDto = new UpdateBranchDto
+            {
+                Id = branchId,
+                Name = "Updated Branch",
+                PhoneNumber = "1234567890",
+                Email = "updated@example.com",
+                AddressId = addressId,
+                ManagerId = managerId
+            };
+
+            var existingBranch = new Branch
+            {
+                Id = branchId,
+                Name = "Old Branch",
+                PhoneNumber = "0987654321",
+                Email = "old@example.com",
+                EstablishedDate = new DateTime(2010, 1, 1),
+                Address = new Address { Id = Guid.NewGuid() },
+                Manager = new Person { Id = Guid.NewGuid() }
+            };
+
+            var address = new Address { Id = addressId };
+            var manager = new Person { Id = managerId };
+
+            var expectedDto = new BranchDto
+            {
+                Id = branchId,
+                Name = updateDto.Name,
+                PhoneNumber = updateDto.PhoneNumber,
+                Email = updateDto.Email
+            };
+
+            _branchRepoMock.Setup(r => r.GetAsync(branchId))
+                           .ReturnsAsync(existingBranch);
+
+            _addressRepoMock.Setup(r => r.GetAsync(addressId))
+                            .ReturnsAsync(address);
+
+            _personRepoMock.Setup(r => r.GetAsync(managerId))
+                           .ReturnsAsync(manager);
+
+            _mapperMock.Setup(r => r.Map<BranchDto>(existingBranch))
+                        .Returns(new BranchDto
+                        {
+                            Name = expectedDto.Name,
+                            PhoneNumber = expectedDto.PhoneNumber,
+                            Email = expectedDto.Email
+                        });
+
+            _branchRepoMock.Setup(r => r.UpdateAsync(existingBranch))
+                           .ReturnsAsync(existingBranch);
+
+            _mapperMock.Setup(m => m.Map<BranchDto>(existingBranch))
+                       .Returns(expectedDto);
 
             // Act
+
             var result = await _branchService.UpdateAsync(updateDto);
+
             // Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.Equal(expectedDto.Id, result.Id);
+            Assert.Equal(expectedDto.Name, result.Name);
+            Assert.Equal(expectedDto.PhoneNumber, result.PhoneNumber);
+            Assert.Equal(expectedDto.Email, result.Email);
         }
-
-
 
         #region Generate Request Object
         private Branch BranchTestData()
