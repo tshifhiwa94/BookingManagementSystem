@@ -100,7 +100,7 @@ namespace BookingManagement.Test.Services
                 EstablishedDate = b.EstablishedDate
             }).ToList();
 
-            _branchRepoMock.Setup(repo => repo.GetAllAsync(b => b.Address, p => p.Manager))
+            _branchRepoMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<Branch, object>>>(), It.IsAny<Expression<Func<Branch, object>>>()))
                            .ReturnsAsync(branchEntities);
 
             _mapperMock.Setup(mapper => mapper.Map<List<BranchDto>>(branchEntities))
