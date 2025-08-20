@@ -8,15 +8,12 @@ namespace BookingManagement.Services.AddressService
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _addressRepo;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         public AddressService(IAddressRepository addressRepo,
-            IMapper mapper,
-            IHttpContextAccessor httpContextAccessor)
+            IMapper mapper)
         {
             _addressRepo = addressRepo;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<AddressDto> CreateAsync(AddressDto addressDto)
         {
