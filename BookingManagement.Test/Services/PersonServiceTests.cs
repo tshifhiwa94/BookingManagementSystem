@@ -108,7 +108,7 @@ public class PersonServiceTests
             EmailAddress = "updated@example.com"
         };
 
-        var existinPerson = new Person
+        var existingPerson = new Person
         {
             Id = personId,
             Name = "Old name",
@@ -116,9 +116,12 @@ public class PersonServiceTests
             EmailAddress = "old@example.com"
         };
 
-        _personRepoMock.Setup(r => r.GetAsync(updateDto.Id)).ReturnsAsync(existinPerson);
+        _personRepoMock.Setup(r => r.GetAsync(updateDto.Id)).ReturnsAsync(existingPerson);
+        _mapperMock.Setup(r => r.Map(updateDto, existingPerson)).Returns(existingPerson);
 
-        _mapperMock.Setup(m => m.Map<PersonDto>(existinPerson))
+        _personRepoMock.Setup(r => r.UpdateAsync(existingPerson)).ReturnsAsync(existingPerson);
+
+        _mapperMock.Setup(m => m.Map<PersonDto>(existingPerson))
            .Returns(new PersonDto
            {
                Id = personId,
@@ -129,13 +132,6 @@ public class PersonServiceTests
 
         #region Reference
 
-        //_mapperMock.Setup(m => m.Map(updateDto, existinPerson))
-        //   .Callback<UpdatePersonDto, Person>((dto, person) =>
-        //   {
-        //       person.Name = dto.Name;
-        //       person.Surname = dto.Surname;
-        //       person.EmailAddress = dto.EmailAddress;
-        //   });
         #endregion
         // Act
         var result = await _personService.UpdateAsync(updateDto);

@@ -110,7 +110,7 @@ namespace BookingManagement.Test.Services
             var result = await _branchService.GetAllAsync();
 
             // Assert
-            Assert.Null(result);
+            Assert.NotNull(result);
             Assert.True(branchDtos.Any());
             Assert.Distinct(branchDtos);
         }
