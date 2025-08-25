@@ -2,6 +2,7 @@
 using BookingManagement.Domain.Branches;
 using BookingManagement.Domain.Departments;
 using BookingManagement.Domain.Resources;
+using BookingManagement.Domain.Resources.Enums;
 using BookingManagement.Repositories.BranchRepository;
 using BookingManagement.Repositories.DepartmentsRepository;
 using BookingManagement.Repositories.PersonRepository;
@@ -162,7 +163,63 @@ namespace BookingManagement.Test.Services
             Assert.Null(result);
         }
 
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnResourceDto_WhenResourceDoesExist()
+        {
+            // Arrange
+            var resourceId = Guid.NewGuid();
 
+            var updateResourceDto = new UpdateResourceDto
+            {
+                Id = resourceId,
+                Name = "Updated Resource",
+                Description = "Updated Description",
+                Status = 1,
+                Type = 1
+            };
+
+            var existingResource = new Resource
+            {
+                Id = resourceId,
+                Name = "Old Resource",
+                Description = "Old Description",
+                Status = RefListResourceStatus.OutOfService,
+                Type = RefListResourceType.Facility
+            };
+
+            var updatedResource = new Resource
+            {
+                Id = resourceId,
+                Name = updateResourceDto.Name,
+                Description = updateResourceDto.Description,
+                Type = (RefListResourceType)updateResourceDto.Type,
+                Status = (RefListResourceStatus)updateResourceDto.Status
+
+            };
+
+            var updatedResourceDto = new ResourceDto
+            {
+                Id = resourceId,
+                Name = updateResourceDto.Name,
+                Description = updateResourceDto.Description,
+                Status = (long?)(RefListResourceStatus)updateResourceDto.Status,
+                Type = (long)(RefListResourceType)updateResourceDto.Type
+            };
+
+            // Mock setup
+            _resourceRepoMock.Setup(r => r.GetAsync(resourceId)).ReturnsAsync(existingResource);
+            _mapperMock.Setup(m => m.Map(updateResourceDto, existingResource)); // No return needed, modifies in-place
+            _resourceRepoMock.Setup(r => r.UpdateAsync(existingResource)).ReturnsAsync(existingResource);
+            _mapperMock.Setup(m => m.Map<ResourceDto>(It.IsAny<Resource>())).Returns(updatedResourceDto); // <-- FIXED
+
+            // Act
+            var result = await _resourceService.UpdateAsync(updateResourceDto);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(updatedResourceDto.Id, result.Id);
+            Assert.IsType<ResourceDto>(result);
+        }
 
         #endregion
     }
