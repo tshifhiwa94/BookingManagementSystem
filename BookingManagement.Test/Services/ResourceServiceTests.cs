@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using BookingManagement.Domain.Branches;
 using BookingManagement.Domain.Departments;
+using BookingManagement.Domain.Persons;
 using BookingManagement.Domain.Resources;
 using BookingManagement.Domain.Resources.Enums;
 using BookingManagement.Repositories.BranchRepository;
 using BookingManagement.Repositories.DepartmentsRepository;
 using BookingManagement.Repositories.PersonRepository;
 using BookingManagement.Repositories.ResourcesRepository;
+using BookingManagement.Services.PersonService.Dtos;
 using BookingManagement.Services.ResourcesService;
 using BookingManagement.Services.ResourcesService.Dtos;
 using Moq;
@@ -48,7 +50,7 @@ namespace BookingManagement.Test.Services
             );
         }
 
-        #region ResourceService Test Methods
+        #region Resource Service Test Methods
 
         [Fact]
         public async Task CreateAsync_ShouldReturnResourceDto_WhenInputIsValid()
@@ -219,6 +221,271 @@ namespace BookingManagement.Test.Services
             Assert.NotNull(result);
             Assert.Equal(updatedResourceDto.Id, result.Id);
             Assert.IsType<ResourceDto>(result);
+        }
+
+        #endregion
+
+        #region Resource Request Service Test Methods
+
+        [Fact]
+        public async Task CreateAsync_ShouldReturnResourceRequestDto_WhenInputIsValid()
+        {
+            // Arrange
+            var resourceId = Guid.NewGuid();
+            var requesterId = Guid.NewGuid();
+
+            var createResourceRequestDto = new CreateResourceRequestDto
+            {
+                ResourceId = resourceId,
+                RequesterId = requesterId,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(1)
+            };
+
+            var resource = new Resource { Id = resourceId, Name = "Projector" };
+            var resourceDto = new ResourceDto { Id = resource.Id, Name = resource.Name };
+
+            var person = new Person { Id = requesterId, Name = "John Doe" };
+            var personDto = new PersonDto { Id = person.Id, Name = person.Name };
+
+            var resourceRequest = new ResourceRequest
+            {
+                Id = Guid.NewGuid(),
+                Resource = resource,
+                Requester = person,
+                StartDate = createResourceRequestDto.StartDate,
+                EndDate = createResourceRequestDto.EndDate
+            };
+
+            var resourceRequestDto = new ResourceRequestDto
+            {
+                Id = resourceRequest.Id,
+                Resource = resourceDto,
+                Requester = personDto,
+                StartDate = resourceRequest.StartDate,
+                EndDate = resourceRequest.EndDate
+            };
+
+            // Mock setup
+            _resourceRepoMock.Setup(r => r.GetAsync(resourceId)).ReturnsAsync(resource);
+            _personRepoMock.Setup(p => p.GetAsync(requesterId)).ReturnsAsync(person);
+            _mapperMock.Setup(m => m.Map<ResourceRequest>(createResourceRequestDto)).Returns(resourceRequest);
+            _resourceRequestRepoMock.Setup(r => r.AddAsync(resourceRequest)).ReturnsAsync(resourceRequest);
+            _mapperMock.Setup(m => m.Map<ResourceRequestDto>(resourceRequest)).Returns(resourceRequestDto);
+
+            // Act
+            var result = await _resourceRequestService.CreateAsync(createResourceRequestDto);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.IsType<ResourceRequestDto>(result);
+            Assert.Equal(resourceRequestDto.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnTrue_WhenResourceRequestExists()
+        {
+            // Arrange
+            var resourceRequestId = Guid.NewGuid();
+            var resourceRequest = new ResourceRequest { Id = resourceRequestId };
+            _resourceRequestRepoMock.Setup(r => r.GetAsync(resourceRequestId)).ReturnsAsync(resourceRequest);
+            _resourceRequestRepoMock.Setup(r => r.DeleteAsync(resourceRequest)).ReturnsAsync(true);
+            // Act
+            var result = await _resourceRequestService.DeleteAsync(resourceRequestId);
+            // Assert
+            Assert.True(result);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnFalse_WhenResourceRequestDoesNotExist()
+        {
+            // Arrange
+            var resourceRequestId = Guid.NewGuid();
+            _resourceRequestRepoMock.Setup(r => r.GetAsync(resourceRequestId)).ReturnsAsync((ResourceRequest)null);
+            // Act
+            var result = await _resourceRequestService.DeleteAsync(resourceRequestId);
+            // Assert
+            Assert.False(result);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnListOfResourceRequestDto_WhenRequestsExist()
+        {
+            // Arrange
+
+            var resourceRequests = new List<ResourceRequest>
+            {
+                new ResourceRequest
+                {
+                    Id = Guid.NewGuid(),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
+                    Resource = new Resource { Id = Guid.NewGuid(), Name = "Projector" },
+                    Requester = new Person { Id = Guid.NewGuid(), Name = "John Doe" }
+                },
+                new ResourceRequest
+                {
+                    Id = Guid.NewGuid(),
+                    StartDate = DateTime.UtcNow.AddDays(2),
+                    EndDate = DateTime.UtcNow.AddDays(3),
+                    Resource = new Resource { Id = Guid.NewGuid(), Name = "Laptop" },
+                    Requester = new Person { Id = Guid.NewGuid(), Name = "Jane Smith" }
+                }
+            };
+            _resourceRequestRepoMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<ResourceRequest, object>>>(), It.IsAny<Expression<Func<ResourceRequest, object>>>()))
+                .ReturnsAsync(resourceRequests);
+            _mapperMock.Setup(m => m.Map<List<ResourceRequestDto>>(resourceRequests)).Returns(new List<ResourceRequestDto>
+            {
+                new ResourceRequestDto
+                {
+                    Id = resourceRequests[0].Id,
+                    StartDate = resourceRequests[0].StartDate,
+                    EndDate = resourceRequests[0].EndDate,
+                    Resource = new ResourceDto { Id = resourceRequests[0].Resource.Id, Name = resourceRequests[0].Resource.Name },
+                    Requester = new PersonDto { Id = resourceRequests[0].Requester.Id, Name = resourceRequests[0].Requester.Name }
+                },
+                new ResourceRequestDto
+                {
+                    Id = resourceRequests[1].Id,
+                    StartDate = resourceRequests[1].StartDate,
+                    EndDate = resourceRequests[1].EndDate,
+                    Resource = new ResourceDto { Id = resourceRequests[1].Resource.Id, Name = resourceRequests[1].Resource.Name },
+                    Requester = new PersonDto { Id = resourceRequests[1].Requester.Id, Name = resourceRequests[1].Requester.Name }
+                }
+            });
+            // Act
+            var result = await _resourceRequestService.GetAllAsync();
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(resourceRequests.Count, result.Count());
+            Assert.IsType<List<ResourceRequestDto>>(result);
+        }
+
+        [Fact]
+        public async Task GetAsync_ShouldReturnNull_WhenResourceRequestDoesNotExist()
+        {
+            // Arrange
+            var resourceRequestId = Guid.NewGuid();
+            _resourceRequestRepoMock.Setup(r => r.GetAsync(resourceRequestId, It.IsAny<Expression<Func<ResourceRequest, object>>>(), It.IsAny<Expression<Func<ResourceRequest, object>>>()))
+                .ReturnsAsync((ResourceRequest)null);
+            // Act
+            var result = await _resourceRequestService.GetAsync(resourceRequestId);
+            // Assert
+            Assert.Null(result);
+        }
+
+
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnResourceRequestDto_WhenResourceRequestExists()
+        {
+            // Arrange
+            var resourceRequestId = Guid.NewGuid();
+
+            var resource = new Resource { Id = Guid.NewGuid(), Name = "Projector" };
+            var requester = new Person { Id = Guid.NewGuid(), Name = "John Doe" };
+            var updateResourceRequestDto = new UpdateResourceRequestDto
+            {
+                Id = resourceRequestId,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(1),
+                RequiresApproval = true,
+            };
+            var existingResourceRequest = new ResourceRequest
+            {
+                Id = resourceRequestId,
+                StartDate = DateTime.UtcNow.AddDays(-1),
+                EndDate = DateTime.UtcNow.AddDays(1),
+                Resource = resource,
+                Requester = requester,
+                RequiresApproval = false
+            };
+            var updatedResourceRequestDto = new ResourceRequestDto
+            {
+                Id = resourceRequestId,
+                StartDate = updateResourceRequestDto.StartDate,
+                EndDate = updateResourceRequestDto.EndDate,
+                Resource = new ResourceDto { Id = resource.Id, Name = "Projector" },
+                Requester = new PersonDto { Id = requester.Id, Name = "John Doe" }
+            };
+            // Mock setup
+            _resourceRequestRepoMock.Setup(r => r.GetAsync(resourceRequestId)).ReturnsAsync(existingResourceRequest);
+            _mapperMock.Setup(m => m.Map(updateResourceRequestDto, existingResourceRequest)); // No return needed, modifies in-place
+            _resourceRequestRepoMock.Setup(r => r.UpdateAsync(existingResourceRequest)).ReturnsAsync(existingResourceRequest);
+            _mapperMock.Setup(m => m.Map<ResourceRequestDto>(existingResourceRequest)).Returns(updatedResourceRequestDto);
+            // Act
+            var result = await _resourceRequestService.UpdateAsync(updateResourceRequestDto);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(updatedResourceRequestDto.Id, result.Id);
+            Assert.IsType<ResourceRequestDto>(result);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnNull_WhenResourceRequestDoesNotExist()
+        {
+            // Arrange
+            var updateResourceRequestDto = new UpdateResourceRequestDto
+            {
+                Id = Guid.NewGuid(),
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(1),
+                RequiresApproval = true,
+            };
+            _resourceRequestRepoMock.Setup(r => r.GetAsync(updateResourceRequestDto.Id)).ReturnsAsync((ResourceRequest)null);
+            // Act
+            var result = await _resourceRequestService.UpdateAsync(updateResourceRequestDto);
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetAsync_ShouldReturnResourceRequestDto_WhenResourceRequestDoesExist()
+        {
+            // Arrange
+            var resourceRequestId = Guid.NewGuid();
+            var resource = new Resource { Id = Guid.NewGuid(), Name = "Projector" };
+            var requester = new Person { Id = Guid.NewGuid(), Name = "John Doe" };
+
+            var resourceRequest = new ResourceRequest
+            {
+                Id = resourceRequestId,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(1),
+                Resource = resource,
+                Requester = requester
+            };
+
+            var resourceRequestDto = new ResourceRequestDto
+            {
+                Id = resourceRequestId,
+                StartDate = resourceRequest.StartDate,
+                EndDate = resourceRequest.EndDate,
+                Resource = new ResourceDto { Id = resource.Id, Name = resource.Name },
+                Requester = new PersonDto { Id = requester.Id, Name = requester.Name }
+            };
+
+            // Mock setup
+            _resourceRequestRepoMock
+                .Setup(r => r.GetAsync(
+                    resourceRequestId,
+                    It.IsAny<Expression<Func<ResourceRequest, object>>>(),
+                    It.IsAny<Expression<Func<ResourceRequest, object>>>()
+                ))
+                .ReturnsAsync(resourceRequest);
+
+            _mapperMock
+                .Setup(m => m.Map<ResourceRequestDto>(It.IsAny<ResourceRequest>()))
+                .Returns(resourceRequestDto); // <-- FIXED
+
+            // Act
+            var result = await _resourceRequestService.GetAsync(resourceRequestId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<ResourceRequestDto>(result);
+            Assert.Equal(resourceRequestDto.Id, result.Id);
         }
 
         #endregion
