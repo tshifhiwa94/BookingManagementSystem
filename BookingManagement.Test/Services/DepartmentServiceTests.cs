@@ -235,15 +235,6 @@ namespace BookingManagement.Test.Services
                 };
         }
 
-        private DepartmentDto GetDummyUpdateDepartmentDto()
-        {
-            return new DepartmentDto
-            {
-                Id = Guid.NewGuid(),
-                Name = "Operations",
-                Description = "Oversees daily business activities"
-            };
-        }
         #endregion
     }
 }

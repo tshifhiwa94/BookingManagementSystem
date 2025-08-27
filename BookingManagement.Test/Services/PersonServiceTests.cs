@@ -18,6 +18,8 @@ public class PersonServiceTests
         _personService = new PersonService(_personRepoMock.Object, _mapperMock.Object);
     }
 
+    #region Reference
+
     [Fact]
     public async Task CreateAsync_ShouldReturnPersonDto_WhenInputIsValid()
     {
@@ -130,14 +132,13 @@ public class PersonServiceTests
                EmailAddress = updateDto.EmailAddress
            });
 
-        #region Reference
 
-        #endregion
         // Act
         var result = await _personService.UpdateAsync(updateDto);
         // Assert
         Assert.NotNull(result);
         Assert.Equal(personId, result.Id);
     }
+    #endregion
 
 }
