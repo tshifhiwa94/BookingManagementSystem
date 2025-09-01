@@ -58,14 +58,10 @@ namespace BookingManagement.Services.ServicesService
             return _mapper.Map<List<ServiceRequestDto>>(serviceRequests);
         }
 
-        public Task<ServiceRequestDto> GetAsync(Guid id)
+        public async Task<ServiceRequestDto> GetAsync(Guid id)
         {
-            if (id == Guid.Empty)
-            {
-                return null;
-            }
             var serviceRequest = _serviceRequestRepo.GetAsync(id, x => x.Requester, x => x.Service);
-            return _mapper.Map<Task<ServiceRequestDto>>(serviceRequest);
+            return _mapper.Map<ServiceRequestDto>(serviceRequest);
         }
 
         public async Task<ServiceRequestDto> UpdateAsync(UpdateServiceRequestDto input)
